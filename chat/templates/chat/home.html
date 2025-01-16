@@ -102,7 +102,7 @@
 <main>
 
     {% for person in users %}
-        <a href="/chat_person/{{ person.id }}" >
+        <a href="{% url 'chat_person' id=person.id %}" >
             <section>
                 <img src="{% static 'chat/face.png' %}">
                 <p>{{ person.username }}</p>

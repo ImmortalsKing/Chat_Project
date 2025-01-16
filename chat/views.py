@@ -26,13 +26,23 @@ class Main(View):
 class Home(View):
     def get(self,request):
         if request.user.is_authenticated:
-            return render(request, 'chat/home.html')
+            users = User.objects.all()
+            context = {
+                'users' : users
+            }
+            return render(request, 'chat/home.html',context)
         else:
             return redirect('main')
 
 class ChatPerson(View):
-    def get(self,request):
-        return render(request, 'chat/chat_person.html')
+    def get(self,request,id):
+        person:User = User.objects.filter(id=id).first()
+        me = request.user
+        context = {
+            'person':person,
+            'me':me
+        }
+        return render(request, 'chat/chat_person.html',context)
 
 class Login(View):
     def get(self,request):

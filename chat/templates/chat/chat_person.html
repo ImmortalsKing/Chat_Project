@@ -308,14 +308,15 @@
 </footer>
 
 <script>
-    const url = 'ws://localhost:8000/websocket/';
+    const person_id = {{ person.id }};
+    const url = `ws://localhost:8000/websocket/${person_id}`;
     const chat_websocket = new WebSocket(url);
 
     const message_area = document.getElementById('messages-area');
     const text_area = document.getElementById('the-message-to-send');
     const send_button = document.getElementById('send-message-button');
     send_button.addEventListener('click', function () {
-        chat_websocket.send(`{'type':'new_message','message':'${text_area.value}'}`);
+        chat_websocket.send(`{"type":"new_message","message":"${text_area.value}"}`);
         message_area.insertAdjacentHTML('beforeend', `<section class="to">
                 <div class="details">
                     <p>2024-01-30</p>
@@ -334,7 +335,19 @@
     });
 
     chat_websocket.onmessage = function (event) {
-        console.log(event.data)
+        const received_data = JSON.parse(event.data)
+
+        if (received_data.type_of_data == 'new_message') {
+            message_area.insertAdjacentHTML('beforeend', `<section class="from">
+        <div class="details">
+            <p>2024-01-30</p>
+            <p>10:55:02</p>
+        </div>
+        <div class="message">
+            <p style="overflow-wrap: anywhere;">${received_data.data}</p>
+        </div>
+    </section>`)
+        }
     };
 
 
